@@ -8,4 +8,25 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AsteroidText">
+        <item name="android:textColor">@color/default_text_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AsteroidText.large">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="AsteroidText.Medium">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="AsteroidText.Small">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AsteroidText.Small.Gray">
+        <item name="android:textColor">@color/text_grey</item>
+    </style>
+
 </resources>
