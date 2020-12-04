@@ -2,6 +2,8 @@ package com.udacity.asteroidradar.main
 
 import android.os.Bundle
 import android.view.*
+import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -10,7 +12,6 @@ import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.adapter.AsteroidAdapter
 import com.udacity.asteroidradar.api.AsteroidApiStatus
 import com.udacity.asteroidradar.database.AsteroidDatabase
-import com.udacity.asteroidradar.database.PodDatabase
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -26,9 +27,9 @@ class MainFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
         val asteroidDoa = AsteroidDatabase.getDatabase(application).asteroidDao
-        val podDoa = PodDatabase.getDatabase(application).podDao
+        //val podDoa = PodDatabase.getDatabase(application).podDao
 
-        val factory = MainViewModelFactory(asteroidDoa, podDoa)
+        val factory = MainViewModelFactory(asteroidDoa)
         viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
 
         binding.viewModel = viewModel
@@ -50,10 +51,11 @@ class MainFragment : Fragment() {
                         image.title
                     )
                 } else {
-                    binding.activityMainImageOfTheDay.setImageResource(R.drawable.placeholder_picture_of_day)
-                    binding.activityMainImageOfTheDay.contentDescription =
-                        getString(R.string.nasa_picture_of_day_unavailable)
+                    imageUnavailable(binding.activityMainImageOfTheDay, R.drawable.placeholder_picture_of_day)
                 }
+            } else if (status == AsteroidApiStatus.ERROR) {
+                imageUnavailable(binding.activityMainImageOfTheDay, R.drawable.ic_no_connection)
+                binding.activityMainImageOfTheDay.scaleType = ImageView.ScaleType.FIT_CENTER
             }
         })
 
@@ -76,6 +78,12 @@ class MainFragment : Fragment() {
 
         setHasOptionsMenu(true)
         return binding.root
+    }
+
+    private fun imageUnavailable(imageView: ImageView, @DrawableRes resource: Int) {
+        imageView.setImageResource(resource)
+        imageView.contentDescription =
+            getString(R.string.nasa_picture_of_day_unavailable)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

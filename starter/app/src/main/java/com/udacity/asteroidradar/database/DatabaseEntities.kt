@@ -61,7 +61,7 @@ fun List<Asteroid>.toEntity(): Array<AsteroidEnt> {
     }.toTypedArray()
 }
 
-@JsonClass(generateAdapter = true)
+/*@JsonClass(generateAdapter = true)
 @Entity(tableName = PodDatabase.DATABASE_NAME)
 data class PodEnt constructor(
     @PrimaryKey
@@ -72,15 +72,19 @@ data class PodEnt constructor(
     val title: String,
     @ColumnInfo(name = "url")
     val url: String
-)
+)*/
 
+/*
 fun PictureOfDay.toEntity(): PodEnt {
-    val calendar = Calendar.getInstance()
-    val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
-    val date = dateFormat.format(calendar.time)
-    return PodEnt(date, mediaType, title, url)
+    return PodEnt(getToday(), mediaType, title, url)
 }
 
 fun PodEnt.toModel(): PictureOfDay {
     return PictureOfDay(mediaType, title, url)
 }
+
+fun getToday(): String {
+    val calendar = Calendar.getInstance()
+    val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
+    return dateFormat.format(calendar.time)
+}*/

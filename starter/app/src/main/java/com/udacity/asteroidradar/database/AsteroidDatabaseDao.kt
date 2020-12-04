@@ -15,11 +15,12 @@ interface AsteroidDoa {
     fun delete(date: String)
 }
 
+/*
 @Dao
 interface PodDoa {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(podEnt: PodEnt)
 
-    @Query("SELECT * FROM ${PodDatabase.DATABASE_NAME} ORDER BY date DESC LIMIT 1")
-    fun getPicOfDay(): LiveData<PodEnt>
-}
+    @Query("SELECT * FROM ${PodDatabase.DATABASE_NAME} WHERE date = :date")
+    fun get(date: String): LiveData<PodEnt>
+}*/

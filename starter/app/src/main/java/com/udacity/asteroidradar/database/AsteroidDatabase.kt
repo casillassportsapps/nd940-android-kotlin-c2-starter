@@ -32,6 +32,7 @@ abstract class AsteroidDatabase : RoomDatabase() {
     }
 }
 
+/*
 @Database(entities = [PodEnt::class], version = 1, exportSchema = false)
 abstract class PodDatabase: RoomDatabase() {
     abstract val podDao: PodDoa
@@ -55,4 +56,4 @@ abstract class PodDatabase: RoomDatabase() {
             }
         }
     }
-}
+}*/

@@ -1,6 +1,5 @@
 package com.udacity.asteroidradar.main
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
@@ -9,14 +8,14 @@ import com.udacity.asteroidradar.api.AsteroidApiStatus
 import com.udacity.asteroidradar.api.getNextSevenDaysFormattedDates
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.AsteroidDoa
-import com.udacity.asteroidradar.database.PodDoa
+
 import com.udacity.asteroidradar.database.toModel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Response
 import kotlin.Exception
 
-class MainViewModel(private val asteroidDao: AsteroidDoa, private val podDao: PodDoa) : ViewModel() {
+class MainViewModel(private val asteroidDao: AsteroidDoa) : ViewModel() {
 
     private val _image = MutableLiveData<PictureOfDay>()
     fun imageOfDay(): PictureOfDay? {
@@ -51,20 +50,18 @@ class MainViewModel(private val asteroidDao: AsteroidDoa, private val podDao: Po
                 _image.value = AsteroidApi.retrofitService.getImageOfDay()
                 _imageOfDayStatus.value = AsteroidApiStatus.DONE
             } catch (e: Exception) {
-                // no connection: get image of day from database
-                getPicOfDayFromDB()
-                _imageOfDayStatus.value = AsteroidApiStatus.DONE
+                //getPicOfDayFromDB()
+                _imageOfDayStatus.value = AsteroidApiStatus.ERROR
             }
         }
     }
 
-    private fun getPicOfDayFromDB() {
-        val pod = podDao.getPicOfDay()
-        Transformations.map(pod) {
-            Log.d("MainViewModel", it.title)
+/*    private fun getPicOfDayFromDB() {
+        val pod = podDao.get(getToday())
+        pod.observeForever {
             _image.value = it.toModel()
         }
-    }
+    }*/
 
     fun getAsteroids(filter: AsteroidFilter) {
         viewModelScope.launch {
@@ -102,7 +99,7 @@ class MainViewModel(private val asteroidDao: AsteroidDoa, private val podDao: Po
 
     private fun getAsteroidsFromDB() {
         val asteroids = asteroidDao.getAsteroids()
-        Transformations.map(asteroids) {
+        asteroids.observeForever {
             _asteroids.value = it.toModel()
         }
     }
@@ -118,11 +115,11 @@ class MainViewModel(private val asteroidDao: AsteroidDoa, private val podDao: Po
 
 enum class AsteroidFilter { TODAY, WEEK, SAVED }
 
-class MainViewModelFactory(private val asteroidDao: AsteroidDoa, private val podDao: PodDoa) : ViewModelProvider.Factory {
+class MainViewModelFactory(private val asteroidDao: AsteroidDoa) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(asteroidDao, podDao) as T
+            return MainViewModel(asteroidDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel Class")
     }

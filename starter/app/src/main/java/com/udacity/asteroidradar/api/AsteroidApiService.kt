@@ -15,7 +15,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.lang.reflect.Type
 
-enum class AsteroidApiStatus { LOADING, DONE }
+enum class AsteroidApiStatus { LOADING, ERROR, DONE }
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
