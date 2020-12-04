@@ -22,7 +22,7 @@ private val moshi = Moshi.Builder()
     .build()
 
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(ScalarJsonConverterFactory.create())
+    .addConverterFactory(ScalarAndModelConverterFactory.create())
     .baseUrl(Constants.BASE_URL)
     .build()
 
@@ -60,7 +60,7 @@ object AsteroidApi {
     val retrofitService: AsteroidApiService by lazy { retrofit.create(AsteroidApiService::class.java) }
 }
 
-class ScalarJsonConverterFactory : Converter.Factory() {
+class ScalarAndModelConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(type: Type, annotations: Array<Annotation>, retrofit: Retrofit): Converter<ResponseBody, *>? {
         annotations.forEach { annotation ->
             return when (annotation) {
@@ -72,6 +72,6 @@ class ScalarJsonConverterFactory : Converter.Factory() {
         return null
     }
     companion object {
-        fun create() = ScalarJsonConverterFactory()
+        fun create() = ScalarAndModelConverterFactory()
     }
 }
