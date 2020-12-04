@@ -15,10 +15,13 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<Asteroid>?) {
 
 @BindingAdapter("statusIcon")
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
+    val context = imageView.context
     if (isHazardous) {
         imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
+        imageView.contentDescription = context.getString(R.string.potentially_hazardous_asteroid_image)
     } else {
         imageView.setImageResource(R.drawable.ic_status_normal)
+        imageView.contentDescription = context.getString(R.string.not_hazardous_asteroid_image)
     }
 }
 
