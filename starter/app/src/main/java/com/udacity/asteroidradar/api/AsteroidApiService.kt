@@ -22,7 +22,7 @@ private val moshi = Moshi.Builder()
     .build()
 
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(HandleScalarAndJsonConverterFactory.create())
+    .addConverterFactory(ScalarJsonConverterFactory.create())
     .baseUrl(Constants.BASE_URL)
     .build()
 
@@ -30,7 +30,7 @@ private val retrofit = Retrofit.Builder()
     AnnotationTarget.PROPERTY_GETTER,
     AnnotationTarget.PROPERTY_SETTER)
 @Retention(AnnotationRetention.RUNTIME)
-internal annotation class Json
+internal annotation class Model
 
 @Target(AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
@@ -40,7 +40,7 @@ internal annotation class Scalar
 
 interface AsteroidApiService {
 
-    @Json
+    @Model
     @GET("planetary/apod?api_key=${Constants.API_KEY}")
     suspend fun getImageOfDay(): PictureOfDay
 
@@ -60,18 +60,18 @@ object AsteroidApi {
     val retrofitService: AsteroidApiService by lazy { retrofit.create(AsteroidApiService::class.java) }
 }
 
-class HandleScalarAndJsonConverterFactory : Converter.Factory() {
+class ScalarJsonConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(type: Type, annotations: Array<Annotation>, retrofit: Retrofit): Converter<ResponseBody, *>? {
         annotations.forEach { annotation ->
             return when (annotation) {
                 is Scalar -> ScalarsConverterFactory.create().responseBodyConverter(type, annotations, retrofit)
-                is Json -> MoshiConverterFactory.create(moshi).responseBodyConverter(type, annotations, retrofit)
+                is Model -> MoshiConverterFactory.create(moshi).responseBodyConverter(type, annotations, retrofit)
                 else -> null
             }
         }
         return null
     }
     companion object {
-        fun create() = HandleScalarAndJsonConverterFactory()
+        fun create() = ScalarJsonConverterFactory()
     }
 }
